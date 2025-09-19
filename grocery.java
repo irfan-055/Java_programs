@@ -1,41 +1,54 @@
-import datetime
+import java.util.Scanner;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
+public class GroceryStore {
 
-items = ["Rice", "Sugar", "Oil", "Soap", "Milk"]
-prices = [50, 40, 100, 25, 30]
+    static String[] items = {"Rice", "Sugar", "Oil", "Soap", "Milk"};
+    static int[] prices = {50, 40, 100, 25, 30};
 
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int[] quantities = new int[items.length];
 
-def calculate_total(quantities):
-    total = sum(prices[i] * quantities[i] for i in range(len(items)))
-    if total > 500:
-        discount = total * 0.10
-        total -= discount
-        print(f"\nDiscount Applied: Rs.{discount:.2f}")
-    return total
+        System.out.println("Welcome to the Grocery Store!");
+        System.out.println("Available items and prices (per unit):");
+        for (int i = 0; i < items.length; i++) {
+            System.out.println((i + 1) + ". " + items[i] + " - Rs." + prices[i]);
+        }
 
+        try {
+            for (int i = 0; i < items.length; i++) {
+                System.out.print("Enter quantity for " + items[i] + ": ");
+                quantities[i] = Integer.parseInt(scanner.nextLine());
+            }
 
-print("Welcome to the Grocery Store!")
-print("Available items:")
-for i in range(len(items)):
-    print(f"{items[i]} - Rs.{prices[i]} per unit")
+            double totalAmount = calculateTotal(quantities);
+            System.out.println("\nTotal cost: Rs." + totalAmount);
 
+            
+            LocalDateTime now = LocalDateTime.now();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+            System.out.println("Purchase Date & Time: " + now.format(formatter));
 
-quantities = []
-for item in items:
-    while True:
-        try:
-            qty = int(input(f"Enter quantity for {item}: "))
-            if qty < 0:
-                raise ValueError("Quantity cannot be negative.")
-            quantities.append(qty)
-            break
-        except ValueError as e:
-            print(f"Invalid input: {e}. Please enter a valid number.")
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid input! Please enter numeric values for quantities.");
+        }
 
+        scanner.close();
+    }
 
-final_amount = calculate_total(quantities)
-print(f"\nTotal Amount to Pay: Rs.{final_amount:.2f}")
+    public static double calculateTotal(int[] quantities) {
+        double total = 0;
+        for (int i = 0; i < items.length; i++) {
+            total += quantities[i] * prices[i];
+        }
 
+        if (total > 500) {
+            System.out.println("You are eligible for a 10% discount!");
+            total *= 0.9;
+        }
 
-now = datetime.datetime.now()
-print(f"Purchase Date & Time: {now.strftime('%d-%m
+        return total;
+    }
+}
